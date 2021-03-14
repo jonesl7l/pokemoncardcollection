@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="7dp"
+    android:background="@drawable/pokemon_card_generic_text_border">
+
+    <TextView
+        android:id="@+id/partial_card_attack_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="19dp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/black_text"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@id/partial_card_attack_type"
+        app:layout_constraintEnd_toStartOf="@id/partial_card_attack_damage"
+        app:layout_constraintStart_toEndOf="@id/partial_card_attack_type"
+        app:layout_constraintTop_toTopOf="@id/partial_card_attack_type"
+        tools:text="Mind Shock" />
+
+    <TextView
+        android:id="@+id/partial_card_attack_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="19dp"
+        android:layout_marginEnd="19dp"
+        android:fontFamily="sans-serif"
+        android:paddingBottom="10dp"
+        android:textColor="@color/black_text"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/partial_card_attack_type"
+        app:layout_constraintTop_toBottomOf="@id/partial_card_attack_type"
+        tools:text="This attack's damage isn't affected by Weakness or Resistance." />
+
+    <TextView
+        android:id="@+id/partial_card_attack_damage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:fontFamily="sans-serif"
+        android:textColor="@color/black_text"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/partial_card_attack_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toEndOf="@id/partial_card_attack_name"
+        app:layout_constraintTop_toTopOf="@id/partial_card_attack_name"
+        tools:text="100x" />
+
+    <FrameLayout
+        android:id="@+id/partial_card_attack_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/type_circle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/partial_card_type_three"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/card_type_anchor"
+        app:layout_constraintEnd_toEndOf="@id/partial_card_attack_type"
+        app:layout_constraintStart_toStartOf="@id/partial_card_attack_type"
+        app:layout_constraintTop_toTopOf="@id/partial_card_attack_type"
+        tools:src="@drawable/type_psychic" />
+
+    <View
+        android:id="@+id/card_type_anchor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/partial_card_attack_type"
+        app:layout_constraintStart_toStartOf="@id/partial_card_attack_type"
+        app:layout_constraintTop_toBottomOf="@id/partial_card_type_three" />
+
+    <ImageView
+        android:id="@+id/partial_card_type_one"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/partial_card_attack_type"
+        app:layout_constraintEnd_toStartOf="@id/partial_card_type_two"
+        app:layout_constraintStart_toStartOf="@id/partial_card_attack_type"
+        app:layout_constraintTop_toBottomOf="@id/card_type_anchor"
+        tools:src="@drawable/type_colorless" />
+
+    <ImageView
+        android:id="@+id/partial_card_type_two"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/partial_card_type_one"
+        app:layout_constraintEnd_toEndOf="@id/partial_card_attack_type"
+        app:layout_constraintStart_toEndOf="@id/partial_card_type_one"
+        app:layout_constraintTop_toTopOf="@id/partial_card_type_one"
+        tools:src="@drawable/type_fighting" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
