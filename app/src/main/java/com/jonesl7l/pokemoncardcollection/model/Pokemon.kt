@@ -9,7 +9,10 @@ data class Pokemon(
     val set: PokeSet,
     val nationalPokedexNumbers: List<String>,
     val artist: String?
-)
+) {
+
+    fun getReleaseDateForSorting(): String = set.releaseDate
+}
 
 data class PokeData(val data: MutableList<Pokemon>)
 

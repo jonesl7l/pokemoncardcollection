@@ -1,7 +1,7 @@
 package com.jonesl7l.pokemoncardcollection.utils
 
 import android.content.Context
-import android.text.SpannableString
+import android.util.DisplayMetrics
 import android.view.View
 import com.jonesl7l.pokemoncardcollection.PokemonApplication
 import com.jonesl7l.pokemoncardcollection.R
@@ -19,7 +19,7 @@ fun View.gone() {
 
 fun String?.orNotSet(): String = this ?: appContext().getString(R.string.generic_not_set)
 
-fun Int?.orZero(): Int = this ?: 0
+fun dpToPx(dp: Float): Float = dp * (appContext().resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
 
 fun appContext(): Context = PokemonApplication.appContext
 

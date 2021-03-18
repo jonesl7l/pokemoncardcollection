@@ -1,7 +1,12 @@
 <resources>
+    <!--  App  -->
     <string name="app_name">Pokemon Card Collection</string>
+
+    <!--  Generic  -->
     <string name="generic_error">Something went wrong, please swipe to refresh!</string>
     <string name="generic_not_set">NOT SET</string>
+
+    <!--  Card  -->
     <string name="card_hp_tet">HP</string>
     <string name="card_number_placeholder">NO. {NUMBER}</string>
 </resources>

@@ -16,7 +16,6 @@
             android:id="@+id/main_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="16dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_card" />
 
@@ -42,7 +41,8 @@
         android:layout_height="match_parent"
         android:background="@color/loading_transparent"
         android:clickable="true"
-        android:focusable="true">
+        android:focusable="true"
+        tools:visibility="gone">
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/main_lottie"

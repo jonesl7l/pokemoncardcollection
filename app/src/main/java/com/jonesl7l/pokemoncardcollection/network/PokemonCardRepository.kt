@@ -10,12 +10,19 @@ import kotlinx.coroutines.flow.flowOn
 import java.net.URLEncoder
 
 import javax.inject.Inject
+import javax.inject.Singleton
 
+/**
+ * Repository modules handle data operations. They provide a clean API so that the rest of the app can retrieve this data easily.
+ * They know where to get the data from and what API calls to make when data is updated.
+ * You can consider repositories to be mediators between different data sources, such as persistent models, web services, and caches.
+ */
+@Singleton
 class PokemonCardRepository @Inject constructor(private val dataSource: PokemonCardDataSource) {
 
     suspend fun fetchPokemonCards(): Flow<Result<PokeData?>> {
-        return flow() {
-            emit(Result.loading())
+        return flow {
+            emit(Result.Loading)
             val result = dataSource.fetchPokemonCards(getPokemonCardsQueryString())
             emit(result)
         }.flowOn(Dispatchers.IO)

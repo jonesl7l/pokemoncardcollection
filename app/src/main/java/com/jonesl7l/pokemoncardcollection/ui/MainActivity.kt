@@ -20,7 +20,14 @@ import com.jonesl7l.pokemoncardcollection.utils.show
 import com.jonesl7l.pokemoncardcollection.viewmodel.PokemonCardViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
-
+/**
+ * Annotated the activity with @AndroidEntryPoint which means that hilt should provide all the dependencies to this fragment that it asks for.
+ * One important point to be noted:-If you annotate an Android class with @AndroidEntryPoint, then you also must annotate Android classes that depend on it.
+ * For example, if you annotate a fragment, then you must also annotate any activities where you use that fragment.
+ *
+ * 'by viewModels' gets a reference to the viewmodel scoped
+ * The viewmodel has to be observed to get data updates
+ */
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -45,8 +52,6 @@ class MainActivity : AppCompatActivity() {
     //region Init
 
     private fun init() {
-        val itemDecorator = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        ContextCompat.getDrawable(this, R.drawable.recycler_divider)?.let { itemDecorator.setDrawable(it) }
         pokeAdapter = PokeAdapter(pokeData)
 
         binding.mainLottie.apply {
@@ -56,18 +61,17 @@ class MainActivity : AppCompatActivity() {
         }
         binding.mainRecyclerview.apply {
             LinearSnapHelper().attachToRecyclerView(this)
-            addItemDecoration(itemDecorator)
             adapter = pokeAdapter
         }
         binding.mainSwipeLayout.setOnRefreshListener { viewModel.getPokemonCards() }
     }
 
     private fun observeLiveData() {
-        viewModel.pokeData.observe(this, Observer { pokeData ->
-            when (pokeData?.status) {
-                Result.Status.SUCCESS -> onShowList(pokeData.data)
-                Result.Status.LOADING -> onLoading()
-                else -> onError(pokeData?.message)
+        viewModel.getPokeData().observe(this, Observer { pokeData ->
+            when (pokeData) {
+                is Result.Success -> onShowList(pokeData.data)
+                is Result.Loading -> onLoading()
+                is Result.Error -> onError(pokeData.message)
             }
         })
     }
@@ -108,6 +112,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     //endregion
+
     companion object {
         private const val LOADING_LOTTIE_REF = "loading"
     }

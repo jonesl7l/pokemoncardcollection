@@ -8,28 +8,26 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.jonesl7l.pokemoncardcollection.R
 import com.jonesl7l.pokemoncardcollection.databinding.ItemCardBinding
+import com.jonesl7l.pokemoncardcollection.databinding.PartialCardAttackBinding
 import com.jonesl7l.pokemoncardcollection.model.PokeData
 import com.jonesl7l.pokemoncardcollection.model.Pokemon
 import com.jonesl7l.pokemoncardcollection.utils.*
 import timber.log.Timber
 import java.util.*
 
-class PokeAdapter(private val pokeData: PokeData) :
-    RecyclerView.Adapter<PokeAdapter.PokemonCardViewHolder>() {
+class PokeAdapter(private val pokeData: PokeData) : RecyclerView.Adapter<PokeAdapter.PokemonCardViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonCardViewHolder {
-        val binding = ItemCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return PokemonCardViewHolder(binding)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonCardViewHolder = PokemonCardViewHolder(ItemCardBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onBindViewHolder(holder: PokemonCardViewHolder, position: Int) {
         holder.bind(pokeData.data[position])
     }
 
-    override fun getItemCount(): Int = pokeData.data.size.orZero()
+    override fun getItemCount(): Int = pokeData.data.size
 
     fun updateDataSet(newPokemonCards: PokeData) {
-        //TODO sorting list by release date
+        //sort by release date
+        newPokemonCards.data.sortByDescending { it.getReleaseDateForSorting() }
 
         val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
 
@@ -65,8 +63,9 @@ class PokeAdapter(private val pokeData: PokeData) :
                 initAttackOne(item)
                 initAttackTwo(item)
                 cardHitpointValueText.text = item.hp
-                cardNumber.text = appContext().getString(R.string.card_number_placeholder).replace("{NUMBER}", item.nationalPokedexNumbers.firstOrNull().orNotSet())
-                cardArtist.text = item.artist.orEmpty()
+                cardNumber.text = appContext().getString(R.string.card_number_placeholder)
+                    .replace("{NUMBER}", item.nationalPokedexNumbers.firstOrNull().orNotSet())
+                cardArtist.text = item.artist.orEmpty().replace(" ", "\n")
             }
         }
 
@@ -91,21 +90,14 @@ class PokeAdapter(private val pokeData: PokeData) :
             }
             with(binding.partialAttackOne) {
                 partialCardAttackName.text = name.orNotSet()
-                partialCardAttackDescription.text = description.orNotSet()
+                if (!description.isNullOrBlank()) {
+                    partialCardAttackDescription.text = description
+                    partialCardAttackDescription.show()
+                } else {
+                    partialCardAttackDescription.gone()
+                }
                 partialCardAttackDamage.text = damage
-                setTypeImage(types, 0, partialCardTypeOne)
-                if (types.size > 1) {
-                    partialCardTypeTwo.show()
-                    setTypeImage(types, 1, partialCardTypeTwo)
-                } else {
-                    partialCardTypeTwo.gone()
-                }
-                if (types.size > 2) {
-                    partialCardTypeThree.show()
-                    setTypeImage(types, 2, partialCardTypeThree)
-                } else {
-                    partialCardTypeThree.gone()
-                }
+                handleTypeCircle(this, types)
             }
         }
 
@@ -129,28 +121,58 @@ class PokeAdapter(private val pokeData: PokeData) :
             }
             with(binding.partialAttackTwo) {
                 partialCardAttackName.text = name.orNotSet()
-                partialCardAttackDescription.text = description.orNotSet()
-                partialCardAttackDamage.text = damage
-                setTypeImage(types, 0, partialCardTypeOne)
-                if (types.size > 1) {
-                    partialCardTypeTwo.show()
-                    setTypeImage(types, 1, partialCardTypeTwo)
+                if (!description.isNullOrBlank()) {
+                    partialCardAttackDescription.text = description
+                    partialCardAttackDescription.show()
                 } else {
-                    partialCardTypeTwo.gone()
+                    partialCardAttackDescription.gone()
+                }
+                partialCardAttackDamage.text = damage
+                handleTypeCircle(this, types)
+            }
+        }
+
+        private fun handleTypeCircle(view: PartialCardAttackBinding, types: List<String>) {
+            with(view) {
+                setTypeImage(types, 0, partialCardAttackType.partialCardTypeOne)
+                if (types.size > 1) {
+                    partialCardAttackType.partialCardTypeTwo.show()
+                    setTypeImage(types, 1, partialCardAttackType.partialCardTypeTwo)
+                } else {
+                    partialCardAttackType.partialCardTypeTwo.gone()
                 }
                 if (types.size > 2) {
-                    partialCardTypeThree.show()
-                    setTypeImage(types, 2, partialCardTypeThree)
+                    partialCardAttackType.partialCardTypeThree.show()
+                    setTypeImage(types, 2, partialCardAttackType.partialCardTypeThree)
                 } else {
-                    partialCardTypeThree.gone()
+                    partialCardAttackType.partialCardTypeThree.gone()
                 }
+                handleTypeImagePosition(this, types.size > 2)
+            }
+        }
+
+        private fun handleTypeImagePosition(view: PartialCardAttackBinding, shouldShiftImages: Boolean) {
+            val typeOneY = dpToPx(shouldShiftImages then -2F ?: 0F)
+            val typeTwoY = dpToPx(shouldShiftImages then -2F ?: 0F)
+            val typeThreeY = dpToPx(shouldShiftImages then 2F ?: 0F)
+
+            val typeOneX = dpToPx(shouldShiftImages then 1F ?: 0F)
+            val typeTwoX = dpToPx(shouldShiftImages then -1F ?: 0F)
+
+            view.apply {
+                partialCardAttackType.partialCardTypeOne.translationX = typeOneX
+                partialCardAttackType.partialCardTypeOne.translationY = typeOneY
+
+                partialCardAttackType.partialCardTypeTwo.translationX = typeTwoX
+                partialCardAttackType.partialCardTypeTwo.translationY = typeTwoY
+
+                partialCardAttackType.partialCardTypeThree.translationY = typeThreeY
             }
         }
 
         private fun setTypeImage(types: List<String>, index: Int, imageView: ImageView) {
             try {
-                val imageRef = getResId(appContext(), "type_${types.getOrNull(index)?.toLowerCase(
-                    Locale.getDefault())}", "drawable")
+                val imageRef = getResId(appContext(), "type_${types.getOrNull(index)?.toLowerCase(Locale.getDefault())}", "drawable")
                 imageView.setImageDrawable(ContextCompat.getDrawable(appContext(), imageRef))
             } catch (exception: Exception) {
                 Timber.e(exception)

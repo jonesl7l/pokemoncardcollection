@@ -1,24 +1,8 @@
 package com.jonesl7l.pokemoncardcollection.model
 
-data class Result<out T>(val status: Status, val data: T?, val error: Error?, val message: String?) {
-
-    enum class Status {
-        SUCCESS,
-        ERROR,
-        LOADING
-    }
-
-    companion object {
-        fun <T> success(data: T?): Result<T> {
-            return Result(Status.SUCCESS, data, null, null)
-        }
-
-        fun <T> error(message: String, error: Error? = null): Result<T> {
-            return Result(Status.ERROR, null, error, message)
-        }
-
-        fun <T> loading(data: T? = null): Result<T> {
-            return Result(Status.LOADING, data, null, null)
-        }
-    }
+sealed class Result<out T : Any?> {
+    
+    data class Success<out T : Any?>(val data: T) : Result<T>()
+    data class Error(val message: String, val exception: Exception? = null) : Result<Nothing>()
+    object Loading : Result<Nothing>()
 }
